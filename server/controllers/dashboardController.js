@@ -81,3 +81,34 @@ exports.dashboard = async (req, res) => {
         console.log(error);
     }
 };
+
+// GET Specific Clothing
+exports.dashboardViewClothing = async (req, res) => {
+    const clothing = await Clothing.findById({ _id: req.params.id })
+        .where({ user: req.user.id })
+        .lean();
+
+    if (clothing) {
+        res.render('dashboard/view-clothes', {
+            clothingID: req.params.id,
+            clothing,
+            layout: '../views/layouts/dashboard',
+        });
+    } else {
+        res.send('Something went wrong...');
+    }
+};
+
+// PUT Update Specific Clothing
+exports.dashboardUpdateClothing = async (req, res) => {
+    try {
+        await Clothing.findOneAndUpdate(
+            { _id: req.params.id },
+            { title: req.body.title, description: req.body.body }
+        ).where({ user: req.user.id });
+
+        res.redirect('/dashboard');
+    } catch (error) {
+        console.log(error);
+    }
+};
