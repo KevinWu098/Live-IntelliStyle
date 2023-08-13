@@ -1,8 +1,8 @@
 // GET Homepage
 exports.homepage = async (req, res) => {
     const locals = {
-        title: "NodeJS Notes",
-        description: 'Free NodeJS Notes App',
+        title: "IntelliStyle",
+        description: 'IntelliStyle - Your Personal Stylist',
     }
 
     res.render('index', {
@@ -14,8 +14,8 @@ exports.homepage = async (req, res) => {
 // GET About
 exports.about = async (req, res) => {
     const locals = {
-        title: "About - NodeJS Notes",
-        description: 'Free NodeJS Notes App',
+        title: "About - IntelliStyle",
+        description: 'IntelliStyle - Your Personal Stylist',
     }
 
     res.render('about', locals)
