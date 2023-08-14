@@ -1,5 +1,8 @@
 const Clothing = require('../models/Clothing');
 const mongoose = require('mongoose');
+const fs = require('fs');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' }); // Specify the destination folder for uploaded files
 
 // GET Dashboard
 exports.dashboard = async (req, res) => {
@@ -145,6 +148,51 @@ exports.dashboardAddClothingSubmit = async (req, res) => {
         const clothingData = {
             clothingType: title,
             description: body,
+            user: req.user.id,
+        };
+
+        await Clothing.create(clothingData);
+        res.redirect('/dashboard');
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+// GET AI Add Clothing
+exports.dashboardAiAddClothing = async (req, res) => {
+    res.render('dashboard/ai-add', {
+        layout: '../views/layouts/dashboard',
+    });
+};
+
+async function queryResNet(filename) {
+    const data = fs.readFileSync(filename);
+    const response = await fetch(
+        'https://api-inference.huggingface.co/models/microsoft/resnet-50',
+        {
+            headers: {
+                Authorization: process.env.HF_AUTH,
+            },
+            method: 'POST',
+            body: data,
+        }
+    );
+    const result = await response.json();
+    return result;
+}
+
+// POST Add Clothing
+exports.dashboardAiAddClothingSubmit = async (req, res) => {
+    try {
+        // Access the uploaded file
+        const uploadedFile = req.file;
+
+        // Process the uploaded file
+        const aiResult = await queryResNet(uploadedFile.path);
+
+        const clothingData = {
+            clothingType: aiResult[0].label,
+            description: `AI Added; Confidence: ${aiResult[0].score}`,
             user: req.user.id,
         };
 

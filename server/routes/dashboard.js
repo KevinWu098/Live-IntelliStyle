@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { isLoggedIn } = require('../middleware/checkAuth');
 const dashboardController = require('../controllers/dashboardController');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' }); // Specify the destination folder for uploaded files
 
 router.get('/dashboard', isLoggedIn, dashboardController.dashboard);
 router.get(
@@ -28,6 +30,17 @@ router.post(
     '/dashboard/add',
     isLoggedIn,
     dashboardController.dashboardAddClothingSubmit
+);
+router.get(
+    '/dashboard/aiAdd',
+    isLoggedIn,
+    dashboardController.dashboardAiAddClothing
+);
+router.post(
+    '/dashboard/aiAdd',
+    isLoggedIn,
+    upload.single('imageUpload'),
+    dashboardController.dashboardAiAddClothingSubmit
 );
 
 module.exports = router;

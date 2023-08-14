@@ -3,3 +3,4 @@
 .prettierrc
 credentials.json
 token.json
+uploads
