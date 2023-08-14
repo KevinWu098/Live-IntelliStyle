@@ -1,10 +1,10 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 const ClothingSchema = new Schema({
     user: {
         type: Schema.ObjectId,
-        ref: 'User'
+        ref: 'User',
     },
     clothingType: {
         type: String,
@@ -16,8 +16,12 @@ const ClothingSchema = new Schema({
     },
     createdAt: {
         type: Date,
-        default: Date.now()
-    }
-})
+        default: Date.now(),
+    },
+    updatedAt: {
+        type: Date,
+        default: Date.now(),
+    },
+});
 
-module.exports = mongoose.model('Clothing', ClothingSchema)
+module.exports = mongoose.model('Clothing', ClothingSchema);

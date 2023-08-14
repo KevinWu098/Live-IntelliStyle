@@ -12,7 +12,7 @@
                 </ol>
             </nav>
             <div class="col d-flex justify-content-between align-items-center">
-                <h1 class="h3">View Note</h1>
+                <h1 class="h3">View Clothing</h1>
                 <button
                     type="button"
                     class="btn btn-danger me-2"
@@ -35,9 +35,14 @@
             class="form-group mb-4 position-absolute"
             style="left: 1px; top: 1px; right: 1px"
         >
-            <div class="form-control fw-bold border-0 fs-4" id="title">
-                <%= clothing.clothingType %>
-            </div>
+            <input
+                type="text"
+                class="form-control fw-bold border-0 fs-4"
+                id="title"
+                name="title"
+                value="<%= clothing.clothingType %>"
+                placeholder="Title"
+            />
         </div>
 
         <div class="form-group mb-4">
@@ -45,7 +50,7 @@
                 class="form-control pt-5 fs-4"
                 id="body"
                 name="body"
-                placeholder=""
+                placeholder="Take a note..."
                 rows="12"
             >
                 <%= clothing.description %>
@@ -96,7 +101,7 @@
                     class="position-relative"
                 >
                     <button type="submit" class="btn btn-primary">
-                        Delete Note
+                        Delete Clothing
                     </button>
                 </form>
             </div>

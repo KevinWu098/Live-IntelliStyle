@@ -104,9 +104,51 @@ exports.dashboardUpdateClothing = async (req, res) => {
     try {
         await Clothing.findOneAndUpdate(
             { _id: req.params.id },
-            { title: req.body.title, description: req.body.body }
+            {
+                clothingType: req.body.title,
+                description: req.body.body,
+                updatedAt: Date.now(),
+            }
         ).where({ user: req.user.id });
 
+        res.redirect('/dashboard');
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+// DELETE Specific Clothing
+exports.dashboardDeleteClothing = async (req, res) => {
+    try {
+        await Clothing.deleteOne({ _id: req.params.id }).where({
+            user: req.user.id,
+        });
+
+        res.redirect('/dashboard');
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+// GET Add Clothing
+exports.dashboardAddClothing = async (req, res) => {
+    res.render('dashboard/add', {
+        layout: '../views/layouts/dashboard',
+    });
+};
+
+// POST Add Clothing
+exports.dashboardAddClothingSubmit = async (req, res) => {
+    try {
+        const { title, body } = req.body;
+
+        const clothingData = {
+            clothingType: title,
+            description: body,
+            user: req.user.id,
+        };
+
+        await Clothing.create(clothingData);
         res.redirect('/dashboard');
     } catch (error) {
         console.log(error);

@@ -45,6 +45,7 @@ app.set('view engine', 'ejs');
 app.use('/', require('./server/routes/auth'));
 app.use('/', require('./server/routes/index'));
 app.use('/', require('./server/routes/dashboard'));
+app.use('/', require('./server/routes/stylist'));
 
 // Handle 404
 app.get('*', function (req, res) {

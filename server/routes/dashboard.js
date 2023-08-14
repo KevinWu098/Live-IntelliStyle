@@ -14,5 +14,20 @@ router.put(
     isLoggedIn,
     dashboardController.dashboardUpdateClothing
 );
+router.delete(
+    '/dashboard/item-delete/:id',
+    isLoggedIn,
+    dashboardController.dashboardDeleteClothing
+);
+router.get(
+    '/dashboard/add',
+    isLoggedIn,
+    dashboardController.dashboardAddClothing
+);
+router.post(
+    '/dashboard/add',
+    isLoggedIn,
+    dashboardController.dashboardAddClothingSubmit
+);
 
 module.exports = router;
