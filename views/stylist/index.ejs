@@ -1,11 +1,61 @@
-<!-- index.ejs -->
-<html>
-    <head>
-        <title>Google Calendar Events</title>
-    </head>
-    <body>
-        <h1>Google Calendar Events</h1>
+<div class="container pb-5 mb-5">
+    <div class="row mb-5">
+        <div class="col">
+            <h1>Lookin' fresh, <%= userName %>!</h1>
+        </div>
+        <div class="col text-end">
+            <button class="btn btn-primary" id="aiButton">⚙ AI Outfit</button>
+            <a href="/dashboard/add" class="btn btn-primary">Add Clothing</a>
+        </div>
+    </div>
 
-        <%- events %>
-    </body>
-</html>
+    <div class="row align-items-center p-0">
+        <div class="col-md-6 align-self-start">
+            <h3 class="">Today's events:</h3>
+            <div class="events">
+                <% events.slice(0, 4).forEach(event => { %>
+                <div class="col border-radius-2 rounded-pill bg-light w-50">
+                    <div class="eventPill border-primary p-2 px-3 mb-2">
+                        <h5 class="event mb-0">
+                            <%= event.length > 25 ? event.substring(0, 25) +
+                            '...' : event %>
+                        </h5>
+                    </div>
+                </div>
+                <% }); %> <% if (events.length > 4) { %>
+                <div class="eventPill border-primary w-5 p-2 px-3 mb-2">
+                    <h5 class="event">... and more!</h5>
+                </div>
+                <% } %>
+            </div>
+        </div>
+
+        <div class="col-md-6 align-self-start">
+            <h3>AI-generated Outfit</h3>
+            <div
+                class="outfitContainer col border-radius-2 rounded bg-light w-100 h-50"
+            >
+                <div
+                    class="border-primary p-2 px-3 mb-2"
+                    id="aiOutfitContainer"
+                ></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const aiButton = document.getElementById('aiButton');
+    const aiOutfitContainer = document.getElementById('aiOutfitContainer');
+
+    aiButton.addEventListener('click', () => {
+        // Replace this with the logic to get the AI-generated outfit data
+
+        // Update the aiOutfitContainer with the generated outfit content
+        aiOutfitContainer.innerHTML = `
+            <div class="aiOutfit">
+                <p><%= outfit %></p>
+            </div>
+        `;
+    });
+</script>
