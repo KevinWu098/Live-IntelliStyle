@@ -1,6 +1,6 @@
 :root {
-    --background-color: #ffc700;
-    --bs-primary-rgb: #12296c;
+    --background-color: rgb(245, 245, 245);
+    --bs-primary-rgb: rgb(30, 100, 50);
 }
 
 body {

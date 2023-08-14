@@ -132,7 +132,7 @@ async function getOutfit(events) {
         authClient: new GoogleAuth().fromAPIKey(API_KEY),
     });
 
-    let promptString = `You are a personal stylist who gives advice on outfits to wear BASED UPON events in a given day. First, prioritize the events given to you in terms of importance. Then, based on prioritization, create a singular outfit for the entire day. Assume the user is male. Your responses should be short and concise and only contain one outfit.`;
+    let promptString = `You are a personal stylist who gives advice on outfits to wear BASED UPON events in a given day. First, prioritize the events given to you in terms of importance. Then, based on prioritization, create a singular outfit for the entire day. Assume the user is non-binary. Your responses should be short and concise and only contain one outfit.`;
 
     promptString += `Today's events are: ${events}`;
 
@@ -173,7 +173,11 @@ async function getOutfit(events) {
             },
         })
         .then((result) => {
-            outfit = result[0]['candidates'][0]['output'];
+            try {
+                outfit = result[0]['candidates'][0]['output'];
+            } catch (error) {
+                console.log(error);
+            }
         });
 
     return outfit;
