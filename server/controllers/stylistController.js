@@ -1,5 +1,5 @@
-// const Clothing = require('../models/Clothing');
-// const mongoose = require('mongoose');
+const Clothing = require('../models/Clothing');
+const mongoose = require('mongoose');
 
 const fs = require('fs').promises;
 const path = require('path');
@@ -86,8 +86,7 @@ async function listEvents(auth) {
         console.log('No upcoming events found.');
         return [];
     }
-    console.log('10 upcoming events found!');
-
+    console.log('Upcoming events found!');
     return events;
 }
 
@@ -120,11 +119,23 @@ async function listTodaysEvents(auth) {
     return events;
 }
 
+// Get clothes in database
+async function getClothes(userID) {
+    const clothes = await Clothing.aggregate([
+        { $sort: { updatedAt: -1 } },
+        { $match: { user: new mongoose.Types.ObjectId(userID) } },
+    ]);
+
+    const clothingTypes = clothes.map((item) => item.clothingType);
+
+    return clothingTypes;
+}
+
 // AI Generated Outfit
 const { TextServiceClient } = require('@google-ai/generativelanguage');
 const { GoogleAuth } = require('google-auth-library');
 
-async function getOutfit(events) {
+async function getOutfit(events, clothes) {
     const MODEL_NAME = 'models/text-bison-001';
     const API_KEY = process.env.PALM_API_KEY;
 
@@ -132,9 +143,11 @@ async function getOutfit(events) {
         authClient: new GoogleAuth().fromAPIKey(API_KEY),
     });
 
-    let promptString = `You are a personal stylist who gives advice on outfits to wear BASED UPON events in a given day. First, prioritize the events given to you in terms of importance. Then, based on prioritization, create a singular outfit for the entire day. Assume the user is non-binary. Your responses should be short and concise and only contain one outfit.`;
+    let promptString = `You are a personal stylist who gives advice on outfits to wear BASED UPON events in a given day. First, prioritize the events given to you in terms of importance. Then, based on prioritization, create a singular outfit for the entire day. Your outfit should work regardless of gender. Your responses should be short and concise and only contain one outfit.`;
 
     promptString += `Today's events are: ${events}`;
+
+    promptString += `The user has these clothes: ${clothes}. Incorporate them into the outfit WHEN and WHERE appropriate`;
 
     promptString +=
         'Your responses should only contain the outfit, nothing else. Do not use odd formatting.';
@@ -195,12 +208,12 @@ exports.stylist = async (req, res) => {
         .catch(console.error);
 
     const formattedEvents = events.map((event, i) => {
-        // const start = event.start.dateTime || event.start.date;
-        // console.log(`${start} - ${event.summary}`);
         return `${event.summary}`;
     });
 
-    const aiOutfit = await getOutfit(formattedEvents);
+    const clothes = getClothes(req.user.id);
+
+    const aiOutfit = await getOutfit(formattedEvents, clothes);
 
     res.render('stylist/index', {
         userName: req.user.firstName,
